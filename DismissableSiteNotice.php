@@ -44,10 +44,13 @@ $wgHooks['SiteNoticeAfter'][] = function( &$notice, $skin ) {
 	// Cookie value consists of two parts
 	$major = (int) $wgMajorSiteNoticeID;
 	$minor = (int) $skin->msg( 'sitenotice_id' )->inContentLanguage()->text();
+	// Auto-reset dismissal after every edit to MediaWiki:Sitenotice
+	$id = intval( $wgMajorSiteNoticeID ) . "." . crc32($skin->msg( 'sitenotice' )->inContentLanguage()->text() );
+
 
 	$out = $skin->getOutput();
 	$out->addModules( 'ext.dismissableSiteNotice' );
-	$out->addJsConfigVars( 'wgSiteNoticeId', "$major.$minor" );
+	$out->addJsConfigVars( 'wgSiteNoticeId', $id );
 
 	$notice = Html::rawElement( 'div', array( 'class' => 'mw-dismissable-notice' ),
 		Html::rawElement( 'div', array( 'class' => 'mw-dismissable-notice-close' ),
